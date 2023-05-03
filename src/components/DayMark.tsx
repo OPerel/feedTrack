@@ -1,18 +1,21 @@
 import React from 'react';
+import { Times } from '../constants';
 
 interface DayMarkProps {
   day: Date;
+  timelineStart: Date;
 }
 
-const DayMark = ({ day }: DayMarkProps): JSX.Element => {
+const DayMark = ({ day, timelineStart }: DayMarkProps): JSX.Element => {
   const dayOfMonth = day.getDate();
-  const month = day.toLocaleString('default', { month: 'short' });
+  const top = Math.floor((day.getTime() - timelineStart.getTime()) / Times.MsPerPx);
 
   return (
-    <div className="w-24 ml-48">
+    <div
+      className="w-[42px] h-[42px] absolute px-2 py-2 border rounded-full bg-black"
+      style={{ top }}
+    >
       <span>{dayOfMonth}</span>
-      &nbsp;
-      <span>{month}</span>
     </div>
   );
 };

@@ -1,5 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import DayMark from './DayMark';
+import { Times } from '../constants';
+import getNextMidnight from '../utils/getNextMidnight';
+import MonthMark from './MonthMark';
+
 // import { Feel, Meal } from '../../types';
 
 interface ItemsTimelineProps {
@@ -7,29 +11,45 @@ interface ItemsTimelineProps {
   // items: Meal[] | Feel[];
 }
 
-const ItemsTimeline = (): JSX.Element => {
-  const today = new Date();
+const ItemsTimeline = (props: ItemsTimelineProps): JSX.Element => {
+  const timelineEnd = getNextMidnight();
   const daysToLoad = 7;
-  const daysArray = [];
-  // daysArray.push(today);
-  for (let i = 1; i <= daysToLoad; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() - i);
-    daysArray.unshift(date);
+  const timelineStart = new Date(timelineEnd);
+  timelineStart.setDate(timelineEnd.getDate() - daysToLoad);
+
+  const daysArray: Date[] = [];
+  for (let i = 0; i <= daysToLoad; i++) {
+    const date = new Date(timelineEnd);
+    date.setDate(timelineEnd.getDate() - i);
+    if (i > 0) {
+      daysArray.unshift(date);
+    }
   }
 
-  const ref = useRef<HTMLDivElement | null>(null);
+  const [month, setMonth] = useState(
+    timelineEnd.toLocaleString('default', { month: 'long' })
+  );
 
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollLeft += ref.current.scrollWidth;
-    }
-  }, []);
+  const monthArray = daysArray.filter((d) => d.getDate() === 1);
+  const lengthToDisplay = (Times.DaysInMs * daysToLoad) / Times.MsPerPx;
 
   return (
-    <div ref={ref} className="flex overflow-scroll">
+    <div className="flex justify-center w-12 h-[85vh] mx-auto my-auto relative">
+      <div className="fixed top-8 h-8 px-4">{month}</div>
+      <div
+        className={`w-0.5 bg-gray-200 mx-auto`}
+        style={{ height: `${lengthToDisplay}px` }}
+      />
       {daysArray.map((d) => (
-        <DayMark key={d.getTime()} day={d} />
+        <DayMark key={d.getTime()} day={d} timelineStart={timelineStart} />
+      ))}
+      {monthArray.map((d) => (
+        <MonthMark
+          key={d.getMonth()}
+          date={d}
+          timelineStart={timelineStart}
+          setMonth={setMonth}
+        />
       ))}
     </div>
   );
