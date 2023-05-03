@@ -31,7 +31,7 @@ const MonthMark = ({ date, timelineStart, setMonth }: MonthMarkProps): JSX.Eleme
         setMonth(month);
       }
 
-      if (entry.boundingClientRect.top > 0) {
+      if (entry.boundingClientRect.top > 50) {
         prevPosition.current = 'below';
       } else {
         prevPosition.current = 'above';
