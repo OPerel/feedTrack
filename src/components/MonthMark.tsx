@@ -44,6 +44,10 @@ const MonthMark = ({ date, timelineStart, setMonth }: MonthMarkProps): JSX.Eleme
     const observer = new IntersectionObserver(handleIntersect);
 
     observer.observe(ref.current as Element);
+
+    return () => {
+      observer.disconnect();
+    };
   }, [handleIntersect]);
 
   return (

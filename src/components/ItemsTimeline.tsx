@@ -1,56 +1,63 @@
-import React, { useState } from 'react';
-import DayMark from './DayMark';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Times } from '../constants';
-import getNextMidnight from '../utils/getNextMidnight';
-import MonthMark from './MonthMark';
+import Feels from './Feels';
+import { useTimelineContext } from '../contextProviders/TimelineProvider';
+import useDaysRangeInMs from '../utils/useDaysRangeInMs';
+import Days from './Days';
+import Months from './Months';
 
-// import { Feel, Meal } from '../../types';
-
-interface ItemsTimelineProps {
-  // type: 'meals' | 'feels';
-  // items: Meal[] | Feel[];
-}
-
-const ItemsTimeline = (props: ItemsTimelineProps): JSX.Element => {
-  const timelineEnd = getNextMidnight();
-  const daysToLoad = 7;
-  const timelineStart = new Date(timelineEnd);
-  timelineStart.setDate(timelineEnd.getDate() - daysToLoad);
-
-  const daysArray: Date[] = [];
-  for (let i = 0; i <= daysToLoad; i++) {
-    const date = new Date(timelineEnd);
-    date.setDate(timelineEnd.getDate() - i);
-    if (i > 0) {
-      daysArray.unshift(date);
-    }
-  }
-
+const ItemsTimeline = (): JSX.Element => {
+  const { timelineEnd, setWeek, week } = useTimelineContext();
   const [month, setMonth] = useState(
     timelineEnd.toLocaleString('default', { month: 'long' })
   );
 
-  const monthArray = daysArray.filter((d) => d.getDate() === 1);
-  const lengthToDisplay = (Times.DaysInMs * daysToLoad) / Times.MsPerPx;
+  const days = useDaysRangeInMs();
+  const lengthToDisplay = (Times.DayInMs * days) / Times.MsPerPx;
+  const timelineStartMark = useRef<HTMLDivElement | null>(null);
+  const scrollableRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        console.log('loading more days');
+        setTimeout(() => {
+          setWeek((prev) => prev + 1);
+        }, 100);
+      }
+    });
+
+    if (timelineStartMark.current) {
+      observer.observe(timelineStartMark.current as Element);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [setWeek]);
+
+  useLayoutEffect(() => {
+    if (scrollableRef.current !== null) {
+      scrollableRef.current.scrollTop += lengthToDisplay / week;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lengthToDisplay]);
 
   return (
-    <div className="flex justify-center w-12 h-[85vh] mx-auto my-auto relative">
-      <div className="fixed top-8 h-8 px-4">{month}</div>
-      <div
-        className={`w-0.5 bg-gray-200 mx-auto`}
-        style={{ height: `${lengthToDisplay}px` }}
-      />
-      {daysArray.map((d) => (
-        <DayMark key={d.getTime()} day={d} timelineStart={timelineStart} />
-      ))}
-      {monthArray.map((d) => (
-        <MonthMark
-          key={d.getMonth()}
-          date={d}
-          timelineStart={timelineStart}
-          setMonth={setMonth}
+    <div ref={scrollableRef} className="overflow-y-scroll w-screen my-16">
+      <div className="flex justify-center w-screen h-[85vh] mx-auto my-auto relative">
+        <div className="fixed top-8 h-8 px-4">{month}</div>
+
+        <div ref={timelineStartMark} className="absolute top-[10vh]" />
+
+        <div
+          className={`w-0.5 bg-gray-200 mx-auto`}
+          style={{ height: `${lengthToDisplay}px` }}
         />
-      ))}
+        <Days />
+        <Months setMonth={setMonth} />
+        <Feels />
+      </div>
     </div>
   );
 };
