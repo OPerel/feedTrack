@@ -1,20 +1,21 @@
 import { gql, useQuery } from '@apollo/client';
 import { Feel } from '../../types';
 
-const useFeels = (end: number, timelineStart: number) => {
+const useFeels = (end: Date, timelineStart: Date) => {
   return useQuery<{
     feels: Feel[];
   }>(
     gql(`
-    query GetFeels($gt: Date!, $lt: Date!) {
+    query GetFeels($gt: DateTime!, $lt: DateTime!) {
       feels(lt: $lt, gt: $gt) {
+        id
         score
-        felt_at
+        createdAt
       }
     }
   `),
     {
-      variables: { lt: end, gt: timelineStart },
+      variables: { lt: end.toISOString(), gt: timelineStart.toISOString() },
     }
   );
 };

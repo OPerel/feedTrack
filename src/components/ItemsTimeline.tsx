@@ -21,9 +21,7 @@ const ItemsTimeline = (): JSX.Element => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         console.log('loading more days');
-        setTimeout(() => {
-          setWeek((prev) => prev + 1);
-        }, 100);
+        setWeek((prev) => prev + 1);
       }
     });
 

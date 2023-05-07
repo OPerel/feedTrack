@@ -7,10 +7,10 @@ import useFetchMoreOnUpdate from '../utils/useFetchMoreOnUpdate';
 
 const Feels = (): JSX.Element | null => {
   const { timelineStart } = useTimelineContext();
-  const end = timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD;
-  const { error, data, fetchMore } = useFeels(end, timelineStart.getTime());
+  const end = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
+  const { error, data, fetchMore } = useFeels(end, timelineStart);
 
-  useFetchMoreOnUpdate(fetchMore, { lt: end, gt: timelineStart.getTime() });
+  useFetchMoreOnUpdate(fetchMore, { lt: end, gt: timelineStart });
 
   if (error) {
     return <p style={{ color: 'red' }}>Error: {JSON.stringify(error)}</p>;
@@ -21,7 +21,7 @@ const Feels = (): JSX.Element | null => {
   return (
     <>
       {data.feels.map((feel: Feel) => {
-        return <Feel key={feel.felt_at} feel={feel} />;
+        return <Feel key={feel.id} feel={feel} />;
       })}
     </>
   );

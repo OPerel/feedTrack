@@ -5,7 +5,7 @@ type UseFetchMoreOnUpdate = (
   fetchMore: <TFetchData, TFetchVars>(
     fetchMoreOptions: FetchMoreQueryOptions<TFetchVars, TFetchData>
   ) => Promise<ApolloQueryResult<TFetchData>>,
-  variables: { gt: number; lt: number }
+  variables: { gt: Date; lt: Date }
 ) => void;
 
 const useFetchMoreOnUpdate: UseFetchMoreOnUpdate = (fetchMore, variables) => {

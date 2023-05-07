@@ -1,9 +1,10 @@
 export interface Meal {
   ingredients: string[];
-  eaten_at: number;
+  createdAt: string;
 }
 
 export interface Feel {
+  id: string;
   score: number;
-  felt_at: number;
+  createdAt: string;
 }
