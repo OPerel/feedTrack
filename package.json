@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@apollo/client": "^3.7.13",
     "antd": "^5.4.7",
+    "dayjs": "^1.11.7",
     "graphql": "^16.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

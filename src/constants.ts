@@ -4,3 +4,8 @@ export enum Times {
 }
 
 export const DAYS_TO_LOAD = 7;
+
+export enum Labels {
+  AddFeel = 'Add Feel',
+  AddMeal = 'Add Meal',
+}

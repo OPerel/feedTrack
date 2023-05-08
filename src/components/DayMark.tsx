@@ -1,4 +1,3 @@
-import React from 'react';
 import { Times } from '../constants';
 
 interface DayMarkProps {
@@ -12,7 +11,7 @@ const DayMark = ({ day, timelineStart }: DayMarkProps): JSX.Element => {
 
   return (
     <div
-      className="w-[42px] h-[42px] absolute px-2 py-2 border rounded-full bg-black"
+      className="w-[42px] h-[42px] absolute px-2 py-2 border rounded-full bg-slate-800"
       style={{ top }}
     >
       <span>{dayOfMonth}</span>

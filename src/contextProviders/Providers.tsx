@@ -1,12 +1,15 @@
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import TimelineProvider from './TimelineProvider';
 import { ApolloProvider } from '@apollo/client';
 import client from '../apollo/client';
+import ThemeProvider from './ThemeProvider';
 
 const Providers = ({ children }: PropsWithChildren): JSX.Element => {
   return (
     <ApolloProvider client={client}>
-      <TimelineProvider>{children}</TimelineProvider>
+      <ThemeProvider>
+        <TimelineProvider>{children}</TimelineProvider>
+      </ThemeProvider>
     </ApolloProvider>
   );
 };

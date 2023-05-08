@@ -8,3 +8,5 @@ export interface Feel {
   score: number;
   createdAt: string;
 }
+
+export type ItemType = 'feel' | 'meal';

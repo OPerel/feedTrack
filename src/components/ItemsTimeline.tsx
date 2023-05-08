@@ -42,9 +42,9 @@ const ItemsTimeline = (): JSX.Element => {
   }, [lengthToDisplay]);
 
   return (
-    <div ref={scrollableRef} className="overflow-y-scroll w-screen my-16">
+    <div ref={scrollableRef} className="overflow-y-scroll w-screen mt-16 bg-slate-800">
       <div className="flex justify-center w-screen h-[85vh] mx-auto my-auto relative">
-        <div className="fixed top-8 h-8 px-4">{month}</div>
+        <div className="fixed top-6 h-8 px-4 text-lg">{month}</div>
 
         <div ref={timelineStartMark} className="absolute top-[10vh]" />
 
