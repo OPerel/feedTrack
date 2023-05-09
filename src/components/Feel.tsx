@@ -1,5 +1,6 @@
 import { Feel } from '../types';
 import useTopCoordByTime from '../utils/useTopCoordByTime';
+import { Badge, Space } from 'antd';
 
 interface FeelProps {
   feel: Feel;
@@ -19,10 +20,19 @@ const mapFeelToColor = (score: number) => {
 };
 
 const Feel = ({ feel: { score, createdAt, id } }: FeelProps): JSX.Element => {
-  const top = useTopCoordByTime(new Date(createdAt));
+  const date = new Date(createdAt);
+  const top = useTopCoordByTime(date);
   return (
-    <div key={id} className="absolute right-24" style={{ top }}>
-      <span style={{ color: mapFeelToColor(score) }}>Feels like {score}</span>
+    <div
+      key={id}
+      className="absolute max-h-fit left-60 py-2 px-4 border rounded text-left"
+      style={{ top }}
+    >
+      <Space size="middle">
+        <span>Feels like {score}</span>
+        <Badge color={mapFeelToColor(score)} />
+      </Space>
+      <p className="text-gray-400 text-sm">{date.toLocaleTimeString()}</p>
     </div>
   );
 };
