@@ -14,6 +14,7 @@ const client = new ApolloClient({
       Query: {
         fields: {
           feels: concatPagination(),
+          meals: concatPagination(),
         },
       },
     },

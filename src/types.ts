@@ -1,4 +1,5 @@
 export interface Meal {
+  id: string;
   ingredients: string[];
   createdAt: string;
 }

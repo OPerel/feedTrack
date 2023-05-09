@@ -5,6 +5,7 @@ import { useTimelineContext } from '../contextProviders/TimelineProvider';
 import useDaysRangeInMs from '../utils/useDaysRangeInMs';
 import Days from './Days';
 import Months from './Months';
+import Meals from './Meals';
 
 const ItemsTimeline = (): JSX.Element => {
   const { timelineEnd, setWeek, week } = useTimelineContext();
@@ -55,6 +56,7 @@ const ItemsTimeline = (): JSX.Element => {
         <Days />
         <Months setMonth={setMonth} />
         <Feels />
+        <Meals />
       </div>
     </div>
   );
