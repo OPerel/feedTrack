@@ -1,21 +1,11 @@
-import useFeels from '../apollo/queries/useFeels';
 import Feel from './Feel';
+import { Feel as FeelType } from '../types';
 
-import { useTimelineContext } from '../contextProviders/TimelineProvider';
-import { DAYS_TO_LOAD, Times } from '../constants';
-import useFetchMoreOnUpdate from '../utils/useFetchMoreOnUpdate';
+interface FeelsProps {
+  data: { feels: FeelType[] } | undefined;
+}
 
-const Feels = (): JSX.Element | null => {
-  const { timelineStart } = useTimelineContext();
-  const end = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
-  const { error, data, fetchMore } = useFeels(end, timelineStart);
-
-  useFetchMoreOnUpdate(fetchMore, { lt: end, gt: timelineStart });
-
-  if (error) {
-    return <p style={{ color: 'red' }}>Error: {JSON.stringify(error)}</p>;
-  }
-
+const Feels = ({ data }: FeelsProps): JSX.Element | null => {
   if (!data) return null;
 
   return (

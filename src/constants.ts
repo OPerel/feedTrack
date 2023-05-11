@@ -9,3 +9,10 @@ export enum Labels {
   AddFeel = 'Add Feel',
   AddMeal = 'Add Meal',
 }
+
+export enum Colors {
+  Red = '#e72525',
+  Orange = '#f17341',
+  Yellow = '#daf141',
+  Green = '#40e029',
+}

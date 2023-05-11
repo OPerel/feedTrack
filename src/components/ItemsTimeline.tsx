@@ -1,14 +1,17 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Times } from '../constants';
+import { DAYS_TO_LOAD, Times } from '../constants';
 import Feels from './Feels';
 import { useTimelineContext } from '../contextProviders/TimelineProvider';
 import useDaysRangeInMs from '../utils/useDaysRangeInMs';
 import Days from './Days';
 import Months from './Months';
 import Meals from './Meals';
+import FeelingPlot from './FeelingPlot';
+import useFeels from '../apollo/queries/useFeels';
+import useFetchMoreOnUpdate from '../utils/useFetchMoreOnUpdate';
 
 const ItemsTimeline = (): JSX.Element => {
-  const { timelineEnd, setWeek, week } = useTimelineContext();
+  const { timelineStart, timelineEnd, setWeek, week } = useTimelineContext();
   const [month, setMonth] = useState(
     timelineEnd.toLocaleString('default', { month: 'long' })
   );
@@ -17,6 +20,11 @@ const ItemsTimeline = (): JSX.Element => {
   const lengthToDisplay = (Times.DayInMs * days) / Times.MsPerPx;
   const timelineStartMark = useRef<HTMLDivElement | null>(null);
   const scrollableRef = useRef<HTMLDivElement | null>(null);
+
+  const end = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
+  const { data, fetchMore } = useFeels(end, timelineStart);
+
+  useFetchMoreOnUpdate(fetchMore, { lt: end, gt: timelineStart });
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -55,8 +63,11 @@ const ItemsTimeline = (): JSX.Element => {
         />
         <Days />
         <Months setMonth={setMonth} />
-        <Feels />
+        <Feels data={data} />
         <Meals />
+        {data?.feels && (
+          <FeelingPlot feels={data.feels} lengthToDisplay={lengthToDisplay} />
+        )}
       </div>
     </div>
   );
