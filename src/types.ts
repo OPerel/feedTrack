@@ -10,4 +10,9 @@ export interface Feel {
   createdAt: string;
 }
 
+export interface TotalItems {
+  totalFeels: number;
+  totalMeals: number;
+}
+
 export type ItemType = 'feel' | 'meal';

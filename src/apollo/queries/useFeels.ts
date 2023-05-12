@@ -2,7 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { Feel } from '../../types';
 
 const useFeels = (end: Date, timelineStart: Date) => {
-  return useQuery<{
+  const { data, fetchMore } = useQuery<{
     feels: Feel[];
   }>(
     gql(`
@@ -18,6 +18,11 @@ const useFeels = (end: Date, timelineStart: Date) => {
       variables: { lt: end.toISOString(), gt: timelineStart.toISOString() },
     }
   );
+
+  return {
+    feelsData: data,
+    fetchMoreFeels: fetchMore,
+  };
 };
 
 export default useFeels;

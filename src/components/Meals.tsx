@@ -1,20 +1,11 @@
-import useMeals from '../apollo/queries/useMeals';
-import { useTimelineContext } from '../contextProviders/TimelineProvider';
-import { DAYS_TO_LOAD, Times } from '../constants';
-import useFetchMoreOnUpdate from '../utils/useFetchMoreOnUpdate';
 import Meal from './Meal';
+import { Meal as MealType } from '../types';
 
-const Meals = () => {
-  const { timelineStart } = useTimelineContext();
-  const end = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
-  const { error, data, fetchMore } = useMeals(end, timelineStart);
+interface MealsProps {
+  data: { meals: MealType[] } | undefined;
+}
 
-  useFetchMoreOnUpdate(fetchMore, { lt: end, gt: timelineStart });
-
-  if (error) {
-    return <p style={{ color: 'red' }}>Error: {JSON.stringify(error)}</p>;
-  }
-
+const Meals = ({ data }: MealsProps) => {
   if (!data) return null;
 
   return (
