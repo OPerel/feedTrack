@@ -58,7 +58,7 @@ const FeelingPlot = ({ feels, timelineLengthInPx }: FeelingPlotProps): JSX.Eleme
       ref={canvasRef}
       height={`${timelineLengthInPx}px`}
       width={`${canvasWidth}px`}
-      className="absolute top-0 right-0"
+      className="absolute top-0 right-0 z-0"
     />
   );
 };
