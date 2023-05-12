@@ -8,6 +8,7 @@ export const DAYS_TO_LOAD = 7;
 export enum Labels {
   AddFeel = 'Add Feel',
   AddMeal = 'Add Meal',
+  TimelineEnd = 'This is as far as it goes...',
 }
 
 export enum Colors {
