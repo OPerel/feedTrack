@@ -11,7 +11,7 @@ type UseFetchMoreOnUpdate = (
   variables: { gt: Date; lt: Date }
 ) => void;
 
-const useFetchMoreOnUpdate: UseFetchMoreOnUpdate = (
+const useFetchMoreOnUpdateTimeline: UseFetchMoreOnUpdate = (
   fetchMoreMeals,
   fetchMoreFeels,
   variables
@@ -28,4 +28,4 @@ const useFetchMoreOnUpdate: UseFetchMoreOnUpdate = (
   }, [fetchMoreFeels, fetchMoreMeals, gt, lt]);
 };
 
-export default useFetchMoreOnUpdate;
+export default useFetchMoreOnUpdateTimeline;

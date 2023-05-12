@@ -1,7 +1,9 @@
 import { MutableRefObject, useEffect } from 'react';
 import { useTimelineContext } from '../contextProviders/TimelineProvider';
 
-const useLoadMoreItems = (timelineStartMark: MutableRefObject<HTMLDivElement | null>) => {
+const useIncreaseTimeLineOnscrollEnd = (
+  timelineStartMark: MutableRefObject<HTMLDivElement | null>
+) => {
   const { setWeeks } = useTimelineContext();
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -21,4 +23,4 @@ const useLoadMoreItems = (timelineStartMark: MutableRefObject<HTMLDivElement | n
   }, [setWeeks, timelineStartMark]);
 };
 
-export default useLoadMoreItems;
+export default useIncreaseTimeLineOnscrollEnd;

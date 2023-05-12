@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { DAYS_TO_LOAD, Times } from '../constants';
 import Feels from './Feels';
 import { useTimelineContext } from '../contextProviders/TimelineProvider';
@@ -8,13 +8,14 @@ import Months from './Months';
 import Meals from './Meals';
 import FeelingPlot from './FeelingPlot';
 import useFeels from '../apollo/queries/useFeels';
-import useFetchMoreOnUpdate from '../utils/useFetchMoreOnUpdate';
-import useLoadMoreItems from '../utils/useLoadMoreItems';
+import useFetchMoreOnUpdateTimeline from '../utils/useFetchMoreOnUpdateTimeline';
+import useIncreaseTimeLineOnscrollEnd from '../utils/useIncreaseTimeLineOnscrollEnd';
 import useMeals from '../apollo/queries/useMeals';
 import useTotalItems from '../apollo/queries/useTotalItems';
+import useScrollToUpdatedTimelinePosition from '../utils/useScrollToUpdatedTimelinePosition';
 
 const ItemsTimeline = (): JSX.Element => {
-  const { timelineStart, timelineEnd, weeks } = useTimelineContext();
+  const { timelineStart, timelineEnd } = useTimelineContext();
   const [month, setMonth] = useState(
     timelineEnd.toLocaleString('default', { month: 'long' })
   );
@@ -24,21 +25,17 @@ const ItemsTimeline = (): JSX.Element => {
   const timelineStartMark = useRef<HTMLDivElement | null>(null);
   const scrollableRef = useRef<HTMLDivElement | null>(null);
 
-  const end = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
-  const { feelsData, fetchMoreFeels } = useFeels(end, timelineStart);
-  const { mealsData, fetchMoreMeals } = useMeals(end, timelineStart);
+  const newRangeEnd = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
+  const { feelsData, fetchMoreFeels } = useFeels(newRangeEnd, timelineStart);
+  const { mealsData, fetchMoreMeals } = useMeals(newRangeEnd, timelineStart);
   const { data: totalItemsData } = useTotalItems();
 
-  useFetchMoreOnUpdate(fetchMoreFeels, fetchMoreMeals, { lt: end, gt: timelineStart });
-
-  useLoadMoreItems(timelineStartMark);
-
-  useLayoutEffect(() => {
-    if (scrollableRef.current !== null) {
-      scrollableRef.current.scrollTop += timelineLengthInPx / weeks;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timelineLengthInPx]);
+  useIncreaseTimeLineOnscrollEnd(timelineStartMark);
+  useFetchMoreOnUpdateTimeline(fetchMoreFeels, fetchMoreMeals, {
+    lt: newRangeEnd,
+    gt: timelineStart,
+  });
+  useScrollToUpdatedTimelinePosition(timelineLengthInPx, scrollableRef);
 
   const shouldLoadMoreItems = () => {
     if (totalItemsData && feelsData && mealsData) {
