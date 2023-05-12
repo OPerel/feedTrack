@@ -5,12 +5,12 @@ import { Colors, Times } from '../constants';
 
 interface FeelingPlotProps {
   feels: Feel[];
-  lengthToDisplay: number;
+  timelineLengthInPx: number;
 }
 
 const canvasWidth = 200;
 
-const FeelingPlot = ({ feels, lengthToDisplay }: FeelingPlotProps): JSX.Element => {
+const FeelingPlot = ({ feels, timelineLengthInPx }: FeelingPlotProps): JSX.Element => {
   const { timelineStart } = useTimelineContext();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -20,21 +20,21 @@ const FeelingPlot = ({ feels, lengthToDisplay }: FeelingPlotProps): JSX.Element 
       const ctx = canvas.getContext('2d');
 
       if (ctx) {
-        ctx.clearRect(0, 0, canvasWidth, lengthToDisplay);
+        ctx.clearRect(0, 0, canvasWidth, timelineLengthInPx);
 
         const gradient = ctx.createLinearGradient(canvasWidth, 0, 0, 0);
-        gradient.addColorStop(0, `${Colors.Red}3f`);
-        gradient.addColorStop(0.15, `${Colors.Orange}3f`);
-        gradient.addColorStop(0.5, `${Colors.Yellow}3f`);
-        gradient.addColorStop(0.7, `${Colors.Green}3f`);
+        gradient.addColorStop(0, `${Colors.Red}1f`);
+        gradient.addColorStop(0.15, `${Colors.Orange}1f`);
+        gradient.addColorStop(0.5, `${Colors.Yellow}1f`);
+        gradient.addColorStop(0.7, `${Colors.Green}1f`);
 
         ctx.fillStyle = gradient;
         ctx.translate(0.5, 0.5);
         ctx.lineWidth = 2;
 
-        let prevY = lengthToDisplay;
+        let prevY = timelineLengthInPx;
         ctx.beginPath();
-        ctx.moveTo(canvasWidth, lengthToDisplay);
+        ctx.moveTo(canvasWidth, timelineLengthInPx);
 
         feels.forEach(({ createdAt, score }) => {
           const time = new Date(createdAt);
@@ -51,12 +51,12 @@ const FeelingPlot = ({ feels, lengthToDisplay }: FeelingPlotProps): JSX.Element 
         ctx.fill();
       }
     }
-  }, [feels, lengthToDisplay, timelineStart]);
+  }, [feels, timelineLengthInPx, timelineStart]);
 
   return (
     <canvas
       ref={canvasRef}
-      height={`${lengthToDisplay}px`}
+      height={`${timelineLengthInPx}px`}
       width={`${canvasWidth}px`}
       className="absolute top-0 right-0"
     />

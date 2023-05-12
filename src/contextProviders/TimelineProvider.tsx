@@ -14,9 +14,8 @@ import { DAYS_TO_LOAD } from '../constants';
 interface TimelineProvider {
   timelineEnd: Date;
   timelineStart: Date;
-  week: number;
-  setTimelineStart: Dispatch<SetStateAction<Date>>;
-  setWeek: Dispatch<SetStateAction<number>>;
+  weeks: number;
+  setWeeks: Dispatch<SetStateAction<number>>;
 }
 
 const TimelineContext = createContext<TimelineProvider>({} as TimelineProvider);
@@ -24,14 +23,14 @@ const TimelineContext = createContext<TimelineProvider>({} as TimelineProvider);
 export const useTimelineContext = () => useContext(TimelineContext);
 
 const TimelineContextProvider = ({ children }: PropsWithChildren): JSX.Element => {
-  const [week, setWeek] = useState<number>(1);
+  const [weeks, setWeeks] = useState<number>(1);
   const [timelineEnd] = useState<Date>(() => getNextMidnight());
 
   const getTimelineStartFromEndAndRange = useCallback(() => {
     const date = new Date(timelineEnd);
-    date.setDate(timelineEnd.getDate() - DAYS_TO_LOAD * week);
+    date.setDate(timelineEnd.getDate() - DAYS_TO_LOAD * weeks);
     return date;
-  }, [timelineEnd, week]);
+  }, [timelineEnd, weeks]);
 
   const [timelineStart, setTimelineStart] = useState<Date>(
     getTimelineStartFromEndAndRange
@@ -46,9 +45,8 @@ const TimelineContextProvider = ({ children }: PropsWithChildren): JSX.Element =
       value={{
         timelineEnd,
         timelineStart,
-        week,
-        setTimelineStart,
-        setWeek,
+        weeks,
+        setWeeks,
       }}
     >
       {children}

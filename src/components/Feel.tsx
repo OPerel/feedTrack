@@ -7,7 +7,7 @@ interface FeelProps {
   feel: Feel;
 }
 
-const Feel = ({ feel: { score, createdAt, id } }: FeelProps): JSX.Element => {
+const Feel = ({ feel: { score, createdAt } }: FeelProps): JSX.Element => {
   const date = new Date(createdAt);
   const top = useTopCoordByTime(date);
   return (
@@ -17,7 +17,6 @@ const Feel = ({ feel: { score, createdAt, id } }: FeelProps): JSX.Element => {
         style={{ top: top + 31, width: '32px', height: '0.2px' }}
       />
       <div
-        key={id}
         className="absolute max-h-fit left-60 py-2 px-4 border rounded text-left"
         style={{ top }}
       >
