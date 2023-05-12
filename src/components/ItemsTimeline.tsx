@@ -14,6 +14,8 @@ import useScrollToUpdatedTimelinePosition from '../utils/useScrollToUpdatedTimel
 import CurrentMonth from './CurrentMonth';
 import TimelineLine from './TimelineLine';
 import TimelineLoader from './TimelineLoader';
+import { Space, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const ItemsTimeline = (): JSX.Element => {
   const { timelineStart, timelineEnd } = useTimelineContext();
@@ -27,8 +29,14 @@ const ItemsTimeline = (): JSX.Element => {
   const scrollableRef = useRef<HTMLDivElement | null>(null);
 
   const newRangeEnd = new Date(timelineStart.getTime() + Times.DayInMs * DAYS_TO_LOAD);
-  const { feelsData, fetchMoreFeels } = useFeels(newRangeEnd, timelineStart);
-  const { mealsData, fetchMoreMeals } = useMeals(newRangeEnd, timelineStart);
+  const { feelsData, feelsLoading, fetchMoreFeels } = useFeels(
+    newRangeEnd,
+    timelineStart
+  );
+  const { mealsData, mealsLoading, fetchMoreMeals } = useMeals(
+    newRangeEnd,
+    timelineStart
+  );
 
   useFetchMoreOnUpdateTimeline(fetchMoreFeels, fetchMoreMeals, {
     lt: newRangeEnd,
@@ -36,11 +44,18 @@ const ItemsTimeline = (): JSX.Element => {
   });
   useScrollToUpdatedTimelinePosition(timelineLengthInPx, scrollableRef);
 
+  const loading = mealsLoading || feelsLoading;
+
   return (
     <div ref={scrollableRef} className="overflow-y-scroll w-screen mt-16 bg-slate-800">
       <div className="flex justify-center w-screen h-[85vh] mx-auto my-auto relative">
-        <CurrentMonth month={month} />
+        {loading && (
+          <Space size="large" id="loading" className="fixed left-4 top-6">
+            <Spin size="large" indicator={<LoadingOutlined />} />
+          </Space>
+        )}
 
+        <CurrentMonth month={month} />
         <TimelineLoader feels={feelsData?.feels} meals={mealsData?.meals} />
 
         <TimelineLine timelineLengthInPx={timelineLengthInPx} />

@@ -2,7 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { Meal } from '../../types';
 
 const useMeals = (end: Date, timelineStart: Date) => {
-  const { data, fetchMore } = useQuery<{
+  const { data, loading, fetchMore } = useQuery<{
     meals: Meal[];
   }>(
     gql(`
@@ -21,6 +21,7 @@ const useMeals = (end: Date, timelineStart: Date) => {
 
   return {
     mealsData: data,
+    mealsLoading: loading,
     fetchMoreMeals: fetchMore,
   };
 };
